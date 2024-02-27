@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 0.4 Amps/phase
 0.11 Nm holding torque
@@ -51,7 +51,7 @@ class Servo:
                     axis = inp[1]
                     self.dc = self.map(axis)
                     self.pwm.ChangeDutyCycle(self.dc)
-                    if self.verbose: print "[Servo] Dutycycle changed to ", axis,",", self.dc
+                    if self.verbose: print("[Servo] Dutycycle changed to ", axis,",", self.dc)
             except:
                 time.sleep(0.001)
                 pass

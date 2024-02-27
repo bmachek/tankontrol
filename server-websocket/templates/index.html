@@ -1,11 +1,10 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-        <link href="http://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css" />
         <meta name="viewport" content="width=device-width, user-scalable=no">
 	    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/Joystick.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/joy.min.js') }}"></script>
     </head>
     <body>
         <div id="joystick" class="joystick_zone"></div>
@@ -17,7 +16,7 @@
                 </div>
             </div>
             <div id="infozone" class="info_zone">
-                <p style="margin:0;padding:0;text-align:center;border-bottom:1px solid #333;">-=<| robotcontrol v1.0 |>=-</p>
+                <p style="margin:0;padding:0;text-align:center;border-bottom:1px solid #333;">-=<| tanKontrol v1.0 |>=-</p>
                 <div id="output0" style="float:left;width:100%;">Joystick left</div>
                 <div id="output1" style="float:left;width:100%;">Joystick right</div>
                 <div id="output2" style="float:left;width:100%;">Buttons</div>
@@ -45,36 +44,29 @@
                     }
                 }, 1000);
 
-                $('#output').text("starting");
-
                 /******************************************
                   BUTTONS
                   *****************************************/
                 $(document).on('touchstart touchmove', '#button1', function(evt){
-                    $('#output2').html("Button1");
-                    socket_control.emit('control', {data:{"A":1}});
-                    evt.preventDefault();
+                    socket_control.emit('control', { data: { "A" : 1 } });
                 });
                 $(document).on('touchstart touchmove', '#button2', function(evt){
-                    socket_control.emit('control', {data:{"B":1}});
-                    $('#output2').html("Button2");
-                    evt.preventDefault();
+                    socket_control.emit('control', { data: { "B" : 1 } });
                 });
 
                 /******************************************
                   JOYSTICKS
                   *****************************************/
-                //socket_control.emit('control', {data:{"left":[(data.distance/options.size), data.angle.degree]}});
-                var test = new Joystick("joystick", 0, socket_control, "left");
-                var test2 = new Joystick("joystick2", 1, socket_control, "right");
-
-                window.oncontextmenu = function(evt){
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    return false;
-                }
+                var Joy1 = new JoyStick('joystick', {}, function(stickData) {
+                    console.log("joy1 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
+                    socket_control.emit('control', { data: { "left" : [ stickData.x, stickData.y ] } });
+                });
+                var Joy2 = new JoyStick('joystick2', {}, function(stickData) {
+                    console.log("joy2 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
+                    socket_control.emit('control', { data: { "right" : [ stickData.x, stickData.y ] } });
+                });
             });
+            
         </script>
-
     </body>
 </html>

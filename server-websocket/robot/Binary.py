@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 0.4 Amps/phase
 0.11 Nm holding torque
@@ -36,7 +36,7 @@ class Binary:
                 if self.verbose: print inp
                 if inp[0] == self.axis and time.time() - self.last_button_ts > self.debounce_time:
                     self.state = (self.state + 1) % 2
-                    if self.verbose: print "[Binary] Changed state to", self.state
+                    if self.verbose: print("[Binary] Changed state to", self.state)
                     GPIO.output(self.pin, self.state)
                     self.last_button_ts = time.time()
             except:

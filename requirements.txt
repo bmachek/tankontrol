@@ -1,3 +1,8 @@
 gevent-websocket
 Flask-Cors
-flask-socketio
+Flask-SocketIO==5.2.0
+python-engineio==4.3.3
+python-socketio==5.7.1
+simple-websocket==0.7.0
+numpy
+# RPi.GPIO
