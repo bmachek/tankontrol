@@ -7,28 +7,22 @@
         <script src="{{ url_for('static', filename='js/joy.min.js') }}"></script>
     </head>
     <body>
-        <div id="joystick" class="joystick_zone"></div>
-
-        <div class="middle_zone">
-            <div id="ledzone" class="led_zone">  
-		        <div id="connex" style="float:left;width:100%;margin:0;padding:0;">
-                    <div class="led-box"><div class="led-red"></div><div class="led-text">Not Connected</div></div>
-                </div>
+	<div id="infozone" class="info_zone">
+	    <div id="connex" style="text-align:center;width:100%;margin:0;padding:0;">
+                <div class="led-box"><div class="led-red"></div><div class="led-text">Not Connected</div></div>
             </div>
-            <div id="infozone" class="info_zone">
-                <p style="margin:0;padding:0;text-align:center;border-bottom:1px solid #333;">-=<| tanKontrol v1.0 |>=-</p>
-                <div id="output0" style="float:left;width:100%;">Joystick left</div>
-                <div id="output1" style="float:left;width:100%;">Joystick right</div>
-                <div id="output2" style="float:left;width:100%;">Buttons</div>
-            </div>
-
-            <div id="buttonzone">
-                <a href="#" id="button1" class="button buttonA noSelect"></a>
-                <a href="#" id="button2" class="button buttonB noSelect" style="float:right;"></a>
-            </div>
+	    <img src="http://tank:8080/" width="100%" />
         </div>
+	
 
-        <div id="joystick2" class="joystick_zone"></div>
+	<div id="controls" class="controls">
+            <div id="joystick" class="joystick_zone" style="float:left;">
+                <a href="#" id="button1" class="button buttonA noSelect"></a>
+	    </div>
+            <div id="joystick2" class="joystick_zone" style="float:right;">
+                <a href="#" id="button1" class="button buttonB noSelect"></a>
+	    </div>
+	</div>
 
         <script type="text/javascript">
             var socket_status = io.connect('http://'+location.host+"/status");
@@ -37,7 +31,7 @@
             $(document).ready(function(){
                 /* connected display */
                 setInterval(function(){
-                    if(socket_status.connected){
+                    if(socket_control.connected){
                         $('#connex').html('<div class="led-box"><div class="led-blue"></div><div class="led-text">Connected</div></div>');
                     }else{
                         $('#connex').html('<div class="led-box"><div class="led-red"></div><div class="led-text">Not Connected</div></div>');
@@ -50,19 +44,15 @@
                 $(document).on('touchstart touchmove', '#button1', function(evt){
                     socket_control.emit('control', { data: { "A" : 1 } });
                 });
-                $(document).on('touchstart touchmove', '#button2', function(evt){
-                    socket_control.emit('control', { data: { "B" : 1 } });
-                });
-
                 /******************************************
                   JOYSTICKS
                   *****************************************/
                 var Joy1 = new JoyStick('joystick', {}, function(stickData) {
-                    console.log("joy1 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
+                    // console.log("joy1 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
                     socket_control.emit('control', { data: { "left" : [ stickData.x, stickData.y ] } });
                 });
                 var Joy2 = new JoyStick('joystick2', {}, function(stickData) {
-                    console.log("joy2 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
+                    // console.log("joy2 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
                     socket_control.emit('control', { data: { "right" : [ stickData.x, stickData.y ] } });
                 });
             });
