@@ -13,14 +13,16 @@
             </div>
 	    <img src="http://tank:8080/" width="100%" />
         </div>
-	
+
+	<div id="filler" style="height: 60%"></div>
 
 	<div id="controls" class="controls">
             <div id="joystick" class="joystick_zone" style="float:left;">
                 <a href="#" id="button1" class="button buttonA noSelect"></a>
 	    </div>
+	    <div id="placeholder" style="width: 100%"></div>
             <div id="joystick2" class="joystick_zone" style="float:right;">
-                <a href="#" id="button1" class="button buttonB noSelect"></a>
+                <a href="#" id="button1" class="button buttonB noSelect" style="float:right;"></a>
 	    </div>
 	</div>
 
@@ -29,6 +31,7 @@
             var socket_control = io.connect('http://'+location.host+"/control");
 
             $(document).ready(function(){
+		document.documentElement.webkitRequestFullScreen();
                 /* connected display */
                 setInterval(function(){
                     if(socket_control.connected){

@@ -7,8 +7,10 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import math
 from multiprocessing import Process, Queue
+import config
+import tank
 
-_debug = True
+tank.init_grovepi_board()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -30,20 +32,19 @@ def default_error_handler(e):
 
 @socketio.on('control', namespace='/control')
 def control(message):
-    if _debug: print("Command received.")
     data = message["data"]
     if "left" in data.keys():
         x = data["left"][0]
         y = data["left"][1]
-        if _debug: print("[Server] Left: ",x,",",y)
+        if config._debug: print("[Server] Left: ",x,",",y)
     elif "right" in data.keys():
         x = data["right"][0]
         y = data["right"][1]
-        if _debug: print("[Server] Right: ",x,",",y)
+        if config._debug: print("[Server] Right: ",x,",",y)
     elif "A" in data.keys():
-        if _debug: print("[Server] A")
+        if config._debug: print("[Server] A")
     elif "B" in data.keys():
-        if _debug: print("[Server] B")
+        if config._debug: print("[Server] B")
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", debug=True, use_reloader=True)
