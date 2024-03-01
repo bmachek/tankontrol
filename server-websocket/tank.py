@@ -64,14 +64,14 @@ def move_tank(throttle_l, throttle_r):
 
 def move_turret(throttle_t):
     if throttle_t < 0:
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_1, 1)
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 1)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
     elif throttle_t > 0:
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_2, 1)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 1)
     else:
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
-        grovepi.digitalWrite(GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
 
 
 
@@ -79,7 +79,8 @@ def throttle2pwm(throttle):
     if throttle == 0:
         return 0
     else:
-        return (config.GROVEPI_PWM_MAX - config.GROVEPI_PWM_MIN) * throttle + config.GROVEPI_PWM_MIN
+        throttle /= 100
+        return int((config.GROVEPI_PWM_MAX - config.GROVEPI_PWM_MIN) * throttle + config.GROVEPI_PWM_MIN)
 
 
 def shoot():

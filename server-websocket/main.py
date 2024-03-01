@@ -34,17 +34,47 @@ def default_error_handler(e):
 def control(message):
     data = message["data"]
     if "left" in data.keys():
-        x = data["left"][0]
-        y = data["left"][1]
-        if config._debug: print("[Server] Left: ",x,",",y)
+        steeringS = data["left"][0]
+        throttleS = data["left"][1]
+        if config._debug: print("[Tank] Movement: ",steeringS,",",throttleS)
+        
+        steering = int(steeringS)
+        throttle = int(throttleS)
+
+        throttle_l = 0.0
+        throttle_r = 0.0
+
+
+        if steering == 0:  # straight
+            throttle_l = throttle/2
+            throttle_r = throttle/2
+        elif steering > 0: # right
+            if throttle < 0:
+                steering = -steering
+            throttle_l = throttle/2
+            throttle_r = (throttle/2) - (steering/2)
+        elif steering < 0: # left
+            if throttle < 0:
+                steering = -steering
+            throttle_l = (throttle/2) + (steering/2)
+            throttle_r = (throttle/2)
+
+        if config._debug:
+            print("[Tank] Calculated throttle percentages, L: %d, R: %d" % (throttle_l, throttle_r))
+
+        tank.move_tank(throttle_l, throttle_r)
+
     elif "right" in data.keys():
         x = data["right"][0]
         y = data["right"][1]
-        if config._debug: print("[Server] Right: ",x,",",y)
+        if config._debug: print("[Tank] Turret: ",x,",",y)
+
+        if x != 0:
+            tank.move_turret(int(x))
+
+
     elif "A" in data.keys():
-        if config._debug: print("[Server] A")
-    elif "B" in data.keys():
-        if config._debug: print("[Server] B")
+        if config._debug: print("[Tank] Fire!")
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", debug=True, use_reloader=True)
