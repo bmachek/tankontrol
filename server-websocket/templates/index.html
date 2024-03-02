@@ -11,7 +11,7 @@
 	    <div id="connex" style="text-align:center;width:100%;margin:0;padding:0;">
                 <div class="led-box"><div class="led-red"></div><div class="led-text">Not Connected</div></div>
             </div>
-	    <img src="http://tank:8080/" width="100%" />
+	    <img src="" id="cam" width="100%" />
         </div>
 
 	<div id="filler" style="height: 60%"></div>
@@ -27,6 +27,7 @@
 	</div>
 
         <script type="text/javascript">
+	    document.getElementById("cam").src = 'http://' + location.hostname + ':8080/';
             var socket_status = io.connect('http://'+location.host+"/status");
             var socket_control = io.connect('http://'+location.host+"/control");
 
