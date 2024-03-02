@@ -13,4 +13,4 @@ GROVEPI_CHANNEL_BUZZER = 15
 GROVEPI_PWM_MIN = 16.0
 GROVEPI_PWM_MAX = 255.0
 
-_debug = True
+_debug = False
