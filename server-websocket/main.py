@@ -77,4 +77,4 @@ def control(message):
         if config._debug: print("[Tank] Fire!")
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", debug=True, use_reloader=True)
+    socketio.run(app, host="0.0.0.0", debug=config._debug, use_reloader=config._debug)
