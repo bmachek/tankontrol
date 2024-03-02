@@ -64,11 +64,11 @@ def move_tank(throttle_l, throttle_r):
 
 def move_turret(throttle_t):
     if throttle_t < 0:
-        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 1)
-        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
-    elif throttle_t > 0:
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 1)
+    elif throttle_t > 0:
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 1)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
     else:
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
