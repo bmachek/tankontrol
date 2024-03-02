@@ -3,7 +3,7 @@ Description=tankontrol streameye webcam stream
 After=network.target
 
 [Service]
-ExecStart=ffmpeg -v quiet -input_format mjpeg -video_size 1280x720 -i /dev/video0 -c copy -f mjpeg - | streameye
+ExecStart=/opt/tankontrol/streameye.sh
 
 [Install]
 WantedBy=multi-user.target
