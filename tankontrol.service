@@ -1,0 +1,9 @@
+[Unit]
+Description=tankontrol flask backend
+After=network.target
+
+[Service]
+ExecStart=/opt/tankontrol/server-websocket/main.py
+
+[Install]
+WantedBy=multi-user.target
