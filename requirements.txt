@@ -7,3 +7,5 @@ python-socketio
 simple-websocket
 numpy
 # RPi.GPIO
+python-periphery
+wiringpi
