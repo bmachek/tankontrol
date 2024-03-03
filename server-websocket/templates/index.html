@@ -18,11 +18,10 @@
 
 	<div id="controls" class="controls">
             <div id="joystick" class="joystick_zone" style="float:left;">
-                <a href="#" id="button1" class="button buttonA noSelect"></a>
 	    </div>
 	    <div id="placeholder" style="width: 100%"></div>
             <div id="joystick2" class="joystick_zone" style="float:right;">
-                <a href="#" id="button1" class="button buttonB noSelect" style="float:right;"></a>
+                <a href="#" id="button1" onclick="socket_control.emit('control', { data: { "A" : 1 } });" class="button buttonB noSelect" style="float:right;"></a>
 	    </div>
 	</div>
 
@@ -42,12 +41,6 @@
                     }
                 }, 1000);
 
-                /******************************************
-                  BUTTONS
-                  *****************************************/
-                $(document).on('touchstart touchmove', '#button1', function(evt){
-                    socket_control.emit('control', { data: { "A" : 1 } });
-                });
                 /******************************************
                   JOYSTICKS
                   *****************************************/

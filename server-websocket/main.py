@@ -75,6 +75,7 @@ def control(message):
 
     elif "A" in data.keys():
         if config._debug: print("[Tank] Fire!")
+        tank.shoot()
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", debug=config._debug, use_reloader=config._debug)
