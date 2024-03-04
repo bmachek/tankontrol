@@ -5,8 +5,6 @@ import grovepi
 import config
 import time
 
-currently_shooting = 0
-
 def init_grovepi_board():
     grovepi.pinMode(config.GROVEPI_CHANNEL_THROTTLE_L, "OUTPUT")
     grovepi.pinMode(config.GROVEPI_CHANNEL_THROTTLE_R, "OUTPUT")
@@ -33,7 +31,9 @@ def init_grovepi_board():
     grovepi.digitalWrite(config.GROVEPI_CHANNEL_BUZZER, 1)
     time.sleep(1)
     grovepi.digitalWrite(config.GROVEPI_CHANNEL_BUZZER, 0)
-
+    
+    global currently_shooting
+    currently_shooting = 0
 
 
 def move_tank(throttle_l, throttle_r):
@@ -63,10 +63,10 @@ def move_tank(throttle_l, throttle_r):
 
 
 def move_turret(throttle_t):
-    if throttle_t < 0:
+    if throttle_t < 0.0:
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 0)
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 1)
-    elif throttle_t > 0:
+    elif throttle_t > 0.0:
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_1, 1)
         grovepi.digitalWrite(config.GROVEPI_CHANNEL_DIRECTION_TURRET_2, 0)
     else:
@@ -79,15 +79,18 @@ def throttle2pwm(throttle):
     if throttle == 0:
         return 0
     else:
-        throttle /= 100
         return int((config.GROVEPI_PWM_MAX - config.GROVEPI_PWM_MIN) * throttle + config.GROVEPI_PWM_MIN)
 
 
 def shoot():
+    global currently_shooting
     if currently_shooting == 0:
         currently_shooting = 1
-        grovepi.digitalWrite(GROVEPI_CHANNEL_GUN, 1)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_GUN, 1)
         time.sleep(1800000 / 1000000.0)
-        grovepi.digitalWrite(GROVEPI_CHANNEL_GUN, 0)
+        grovepi.digitalWrite(config.GROVEPI_CHANNEL_GUN, 0)
         currently_shooting = 0
+    else:
+        if config._debug:
+            print("Cannot process multiple shoot orders at the same time.")
 

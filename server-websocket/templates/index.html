@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=no">
 	    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
         <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/joy.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/joystick.js') }}"></script>
     </head>
     <body>
 	<div id="infozone" class="info_zone">
@@ -14,14 +14,28 @@
 	    <img src="" id="cam" width="100%" />
         </div>
 
-	<div id="filler" style="height: 60%"></div>
+	<div id="filler" style="height: 60%; text-align: center; vertical-align: middle;">
+	</div>
 
 	<div id="controls" class="controls">
             <div id="joystick" class="joystick_zone" style="float:left;">
+		<div style="width: 128px; position: absolute; left:50px; bottom:50px;">
+			<img src="{{ url_for('static', filename='images/joystick-base.png') }}"/>
+			<div id="stick1" style="position: absolute; left:32px; top:32px;">
+				<img src="{{ url_for('static', filename='images/joystick-red.png') }}"/>		
+			</div>
+		</div>
 	    </div>
-	    <div id="placeholder" style="width: 100%"></div>
+	    <div id="placeholder" style="width: 100%;  vertical-align: bottom;">
+		    <input type="button" id="fire" value="Fire!"/>
+	    </div>
             <div id="joystick2" class="joystick_zone" style="float:right;">
-                <a href="#" id="button1" onclick="socket_control.emit('control', { data: { "A" : 1 } });" class="button buttonB noSelect" style="float:right;"></a>
+		<div style="width: 128px; position: absolute; right: 50px; bottom: 50px;">
+			<img src="{{ url_for('static', filename='images/joystick-base.png') }}"/>
+			<div id="stick2" style="position: absolute; left:32px; top:32px;">
+				<img src="{{ url_for('static', filename='images/joystick-blue.png') }}"/>		
+			</div>
+		</div>
 	    </div>
 	</div>
 
@@ -30,9 +44,17 @@
             var socket_status = io.connect('http://'+location.host+"/status");
             var socket_control = io.connect('http://'+location.host+"/control");
 
+	    let joystick1 = new JoystickController("stick1", 64, 8);
+            let joystick2 = new JoystickController("stick2", 64, 8);
+
+	    document.getElementById("stick1").addEventListener("mousemove", function (event) { socket_control.emit('control', { data: { left : joystick1.value } } ); });
+            document.getElementById("stick1").addEventListener("touchmove", function (event) { socket_control.emit('control', { data: { left : joystick1.value } } ); });
+            document.getElementById("stick2").addEventListener("mousemove", function (event) { socket_control.emit('control', { data: { right: joystick2.value } } ); } );
+            document.getElementById("stick2").addEventListener("touchmove", function (event) { socket_control.emit('control', { data: { right: joystick2.value } } ); } );
+
+		document.getElementById("fire").addEventListener("click" , function (event) { console.log("Fire!"); socket_control.emit("shoot", {} ); } );
+	    
             $(document).ready(function(){
-		document.documentElement.webkitRequestFullScreen();
-                /* connected display */
                 setInterval(function(){
                     if(socket_control.connected){
                         $('#connex').html('<div class="led-box"><div class="led-blue"></div><div class="led-text">Connected</div></div>');
@@ -40,18 +62,6 @@
                         $('#connex').html('<div class="led-box"><div class="led-red"></div><div class="led-text">Not Connected</div></div>');
                     }
                 }, 1000);
-
-                /******************************************
-                  JOYSTICKS
-                  *****************************************/
-                var Joy1 = new JoyStick('joystick', { "height": 200, "width": 200 }, function(stickData) {
-                    // console.log("joy1 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
-                    socket_control.emit('control', { data: { "left" : [ stickData.x, stickData.y ] } });
-                });
-                var Joy2 = new JoyStick('joystick2', {}, function(stickData) {
-                    // console.log("joy2 used" + JSON.stringify({ data:{"left": [ stickData.x, stickData.y ] } }))
-                    socket_control.emit('control', { data: { "right" : [ stickData.x, stickData.y ] } });
-                });
             });
             
         </script>

@@ -34,48 +34,49 @@ def default_error_handler(e):
 def control(message):
     data = message["data"]
     if "left" in data.keys():
-        steeringS = data["left"][0]
-        throttleS = data["left"][1]
-        if config._debug: print("[Tank] Movement: ",steeringS,",",throttleS)
-        
-        steering = int(steeringS)
-        throttle = int(throttleS)
+        steering = float(data["left"]["x"])
+        throttle = float(data["left"]["y"])
+
+        # Reverse throttle value
+        throttle *= -1
+
+        if config._debug: print("[Tank] Movement: ",steering,",",throttle)
 
         throttle_l = 0.0
         throttle_r = 0.0
 
 
         if steering == 0:  # straight
-            throttle_l = throttle/2
-            throttle_r = throttle/2
+            throttle_l = throttle
+            throttle_r = throttle
         elif steering > 0: # right
             if throttle < 0:
                 steering = -steering
-            throttle_l = throttle/2
-            throttle_r = (throttle/2) - (steering/2)
+            throttle_l = throttle
+            throttle_r = (throttle) - (steering)
         elif steering < 0: # left
             if throttle < 0:
                 steering = -steering
-            throttle_l = (throttle/2) + (steering/2)
-            throttle_r = (throttle/2)
+            throttle_l = (throttle) + (steering)
+            throttle_r = (throttle)
 
         if config._debug:
-            print("[Tank] Calculated throttle percentages, L: %d, R: %d" % (throttle_l, throttle_r))
+            print("[Tank] Calculated throttle percentages, L: %f, R: %f" % (throttle_l, throttle_r))
 
         tank.move_tank(throttle_l, throttle_r)
 
     elif "right" in data.keys():
-        x = data["right"][0]
-        y = data["right"][1]
+        x = float(data["right"]["x"])
+        y = float(data["right"]["y"])
         if config._debug: print("[Tank] Turret: ",x,",",y)
 
         if x != 0:
-            tank.move_turret(int(x))
+            tank.move_turret(float(x))
 
-
-    elif "A" in data.keys():
-        if config._debug: print("[Tank] Fire!")
-        tank.shoot()
+@socketio.on('shoot', namespace='/control')
+def shoot(message):
+    if config._debug: print("Received fire order.")
+    tank.shoot()
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", debug=config._debug, use_reloader=config._debug)
