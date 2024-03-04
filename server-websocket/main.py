@@ -69,9 +69,7 @@ def control(message):
         x = float(data["right"]["x"])
         y = float(data["right"]["y"])
         if config._debug: print("[Tank] Turret: ",x,",",y)
-
-        if x != 0:
-            tank.move_turret(float(x))
+        tank.move_turret(float(x))
 
 @socketio.on('shoot', namespace='/control')
 def shoot(message):
